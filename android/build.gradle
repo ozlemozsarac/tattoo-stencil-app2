@@ -1,62 +1,33 @@
-plugins {
-    id "com.android.application"
-    id "kotlin-android"
-    id "dev.flutter.flutter-gradle-plugin"
-}
-
-def localProperties = new Properties()
-def localPropertiesFile = rootProject.file('local.properties')
-if (localPropertiesFile.exists()) {
-    localPropertiesFile.withReader('UTF-8') { reader ->
-        localProperties.load(reader)
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
     }
 }
 
-def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
-if (flutterVersionCode == null) {
-    flutterVersionCode = '1'
+rootProject.buildDir = "../build"
+subprojects {
+    project.buildDir = "${rootProject.buildDir}/${project.name}"
+}
+subprojects {
+    project.evaluationDependsOn(":app")
 }
 
-def flutterVersionName = localProperties.getProperty('flutter.versionName')
-if (flutterVersionName == null) {
-    flutterVersionName = '1.0'
+tasks.register("clean", Delete) {
+    delete rootProject.buildDir
 }
+```
 
-android {
-    namespace "com.tattoo.stencil"
-    compileSdk 35
-    ndkVersion flutter.ndkVersion
+**Commit message:** `Simplify android/build.gradle`
 
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
+---
 
-    kotlinOptions {
-        jvmTarget = '1.8'
-    }
+## 📋 Kontrol Listesi
 
-    sourceSets {
-        main.java.srcDirs += 'src/main/kotlin'
-    }
-
-    defaultConfig {
-        applicationId "com.tattoo.stencil"
-        minSdkVersion 21
-        targetSdkVersion 34
-        versionCode flutterVersionCode.toInteger()
-        versionName flutterVersionName
-    }
-
-    buildTypes {
-        release {
-            signingConfig signingConfigs.debug
-        }
-    }
-}
-
-flutter {
-    source '../..'
-}
-
-dependencies {}
+GitHub'da şu dosyaların var olduğundan emin ol:
+```
+✅ android/settings.gradle (YENİ içerikle)
+✅ android/build.gradle (basitleştirilmiş)
+✅ android/gradle.properties
+✅ android/app/build.gradle (compileSdk 35)
+✅ android/app/src/main/AndroidManifest.xml (icon kaldırılmış)
